@@ -14,4 +14,7 @@
 .idea/sonarlint/issuestore/index.pb
 /target
 /common/target
-/service/target
+/service/target!/.idea/sonarlint/issuestore/index.pb
+!/.idea/sonarlint/issuestore/
+!/.idea/sonarlint/
+!/.idea/
