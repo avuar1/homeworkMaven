@@ -1,7 +1,7 @@
 package com.avuar1.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,14 +12,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "car", schema = "public")
 public class Car {
 
-    @Id
+    @Id  // Написать Скрипит
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer model;
+    @Enumerated(EnumType.STRING)
+    private CarModel carModel;
 
-    private Integer carCategoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private CarCategory carCategory;
 
     private String colour;
 

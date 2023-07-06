@@ -1,8 +1,9 @@
 package com.avuar1.entity;
 
-import java.time.LocalDate;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,21 +14,34 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "orders", schema = "public")
 public class Order {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    private Integer carId;
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private String userId;
 
-    private LocalDate rentalStart;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "car_id", referencedColumnName = "id")
+    private Car car;
 
-    private LocalDate rentalEnd;
+    @Column(name = "car_id", insertable = false, updatable = false)
+    private String car_id;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
     private String message;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "order")
+    private List<RentalTime> rentalTimes = new ArrayList<>();
 
 }
