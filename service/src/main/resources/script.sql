@@ -8,9 +8,10 @@ CREATE TABLE users
     role       VARCHAR(32)  NOT NULL
 );
 
+DROP TABLE users CASCADE;
 
 
-CREATE TABLE client_data
+CREATE TABLE customer_data
 (
     id                SERIAL PRIMARY KEY,
     user_id           INT REFERENCES users (id) NOT NULL UNIQUE,
@@ -19,12 +20,16 @@ CREATE TABLE client_data
     credit_amount     NUMERIC(8, 2)            NOT NULL
 );
 
+DROP TABLE customer_data CASCADE;
+
 CREATE TABLE car_category
 (
     id        SERIAL PRIMARY KEY,
     category  VARCHAR(128)  NOT NULL UNIQUE,
     day_price NUMERIC(8, 2) NOT NULL
 );
+
+DROP TABLE car_category CASCADE;
 
 CREATE TABLE car
 (
@@ -36,16 +41,19 @@ CREATE TABLE car
 );
 
 
+DROP TABLE car CASCADE;
+
+
 CREATE TABLE orders
 (
     id         SERIAL PRIMARY KEY,
     user_id    INT REFERENCES users (id) NOT NULL,
     car_id     INT REFERENCES car (id)   NOT NULL,
-    begin_time TIMESTAMP                 NOT NULL,
-    end_time   TIMESTAMP                 NOT NULL,
     status     VARCHAR(32)               NOT NULL,
     message    TEXT
 );
+
+DROP TABLE  orders CASCADE;
 
 CREATE TABLE rental_time
 (
@@ -55,3 +63,5 @@ CREATE TABLE rental_time
     end_time   TIMESTAMP                  NOT NULL,
     order_id   INT REFERENCES orders (id) NOT NULL
 );
+
+DROP TABLE  rental_time CASCADE;

@@ -29,3 +29,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 }
+
+
+//TODO Сделать тест на все сущности проверить UserIT
+//TODO Сделать маппинг между таблицами

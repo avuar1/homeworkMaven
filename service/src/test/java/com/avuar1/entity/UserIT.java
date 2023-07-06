@@ -1,23 +1,27 @@
 package com.avuar1.entity;
 
-import com.avuar1.util.HibernateUtil;
-import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import util.HibernateTestUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserIT {
 
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
     @BeforeAll
     void setup() {
-        sessionFactory = HibernateUtil.buildSessionFactory();
+        sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
     @AfterAll
@@ -55,8 +59,10 @@ class UserIT {
             assertEquals("test", savedUser.getPassword());
             assertEquals("CLIENT", savedUser.getRole().toString());
 
-            transaction.commit();
 
+            transaction.rollback();
+            session.delete(user);
+            session.clear();
         }
     }
 
@@ -73,18 +79,21 @@ class UserIT {
                     .password("test")
                     .role(Role.CLIENT)
                     .build();
-
+            // Сохранили юзера
             session.save(user);
-
+            // Пропихнули юзера
             session.flush();
+            //убрали Юзера из контекста
             session.evict(user);
-
+            // закрыли транзакцию
             transaction.commit();
-
+            session.clear();
+            // Открыли вторую транзакцию
             Transaction transaction2 = session.beginTransaction();
 
+            // добавили юзера в контекст
             User foundUser = session.get(User.class, user.getId());
-
+            // сравнили
             assertNotNull(foundUser);
 
             assertEquals("Ivan", foundUser.getFirstName());
@@ -93,7 +102,13 @@ class UserIT {
             assertEquals("test", foundUser.getPassword());
             assertEquals("CLIENT", foundUser.getRole().toString());
 
+//            // откатили транзакцию
+            transaction2.rollback();
+            // удалили юзера из БД
+            session.delete(user);
             transaction2.commit();
+            // очистили сессию
+            session.clear();
         }
     }
 }
