@@ -13,15 +13,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "orders", schema = "public")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    private Integer carId;
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private String userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "car_id", referencedColumnName = "id")
+    private Car car;
+
+    @Column(name = "car_id", insertable = false, updatable = false)
+    private String car_id;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;

@@ -1,10 +1,7 @@
 package com.avuar1.entity;
 
 import java.time.LocalDate;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +13,7 @@ import net.bytebuddy.implementation.bind.annotation.BindingPriority;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "customer_data", schema = "public")
 public class CustomerData {
 
     @Id
