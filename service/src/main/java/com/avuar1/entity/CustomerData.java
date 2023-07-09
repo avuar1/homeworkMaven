@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.BindingPriority;
 
 @Data
 @NoArgsConstructor
@@ -20,11 +19,19 @@ public class CustomerData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
+    @Column(unique = true)
     private String driverLicenseNumber;
 
     private LocalDate driverLicenseExpiration;
 
     private Double creditAmount;
+
+    public void setUser(User user){
+        user.setCustomerData(this);
+        this.user = user;
+    }
 }

@@ -1,7 +1,8 @@
 package com.avuar1.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,5 +39,9 @@ public class Order {
     private OrderStatus orderStatus;
 
     private String message;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "order")
+    private List<RentalTime> rentalTimes = new ArrayList<>();
 
 }

@@ -1,23 +1,24 @@
-CREATE TABLE users
-(
-    id         SERIAL PRIMARY KEY,
-    first_name VARCHAR(128) NOT NULL,
-    last_name  VARCHAR(128) NOT NULL,
-    email      VARCHAR(256) NOT NULL UNIQUE,
-    password   VARCHAR(128) NOT NULL,
-    role       VARCHAR(32)  NOT NULL
+
+CREATE TABLE users (
+                       id SERIAL PRIMARY KEY,
+                       first_name VARCHAR(255),
+                       last_name VARCHAR(255),
+                       email VARCHAR(255),
+                       password VARCHAR(255),
+                       role VARCHAR(255),
+                       customer_data_id INTEGER,
+                       FOREIGN KEY (customer_data_id) REFERENCES customer_data(id)
 );
 
 DROP TABLE users CASCADE;
 
 
-CREATE TABLE customer_data
-(
-    id                        SERIAL PRIMARY KEY,
-    user_id                   INT REFERENCES users (id) NOT NULL UNIQUE,
-    driver_licence_number     VARCHAR(32)               NOT NULL UNIQUE,
-    driver_license_expiration DATE                      NOT NULL,
-    credit_amount             NUMERIC(8, 2)             NOT NULL
+CREATE TABLE customer_data (
+                               id SERIAL PRIMARY KEY,
+                               user_id INTEGER,
+                               driver_license_number VARCHAR(255) UNIQUE,
+                               driver_license_expiration DATE,
+                               credit_amount NUMERIC(8 , 2) NOT NULL
 );
 
 DROP TABLE customer_data CASCADE;
@@ -34,35 +35,36 @@ DROP TABLE car_category CASCADE;
 CREATE TABLE car
 (
     id             SERIAL PRIMARY KEY,
-    model          VARCHAR(32)                      NOT NULL,
-    category_id    INT REFERENCES car_category (id) NOT NULL,
-    colour         VARCHAR(32)                      NOT NULL,
-    seats_quantity INT                              NOT NULL
+    car_model      VARCHAR(255),
+    category_id    INTEGER,
+    colour         VARCHAR(255),
+    seats_quantity INTEGER,
+    FOREIGN KEY (category_id) REFERENCES car_category (id)
 );
-
 
 DROP TABLE car CASCADE;
 
 
-CREATE TABLE orders
-(
-    id           SERIAL PRIMARY KEY,
-    user_id      INTEGER,
-    car_id       INTEGER,
-    order_status VARCHAR(255),
-    message      VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (car_id) REFERENCES car (id)
+CREATE TABLE orders (
+                        id SERIAL PRIMARY KEY,
+                        user_id INTEGER,
+                        car_id INTEGER,
+                        order_status VARCHAR(255),
+                        message VARCHAR(255),
+                        FOREIGN KEY (user_id) REFERENCES users(id),
+                        FOREIGN KEY (car_id) REFERENCES car(id)
 );
 
 DROP TABLE orders CASCADE;
 
 CREATE TABLE rental_time (
                              id SERIAL PRIMARY KEY,
-                             car_id INTEGER REFERENCES car(id),
+                             car_id INTEGER,
                              start_rental_time TIMESTAMP,
                              end_rental_time TIMESTAMP,
-                             order_id INTEGER REFERENCES orders(id)
+                             order_id INTEGER,
+                             FOREIGN KEY (car_id) REFERENCES car(id),
+                             FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
 DROP TABLE rental_time CASCADE;

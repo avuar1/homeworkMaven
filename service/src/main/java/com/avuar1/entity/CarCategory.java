@@ -1,5 +1,6 @@
 package com.avuar1.entity;
 
+import java.util.List;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,4 +22,7 @@ public class CarCategory {
     private String category;
 
     private Double dayPrice;
+
+    @OneToMany(mappedBy = "carCategory", cascade = CascadeType.ALL)
+    private List<Car> cars;
 }

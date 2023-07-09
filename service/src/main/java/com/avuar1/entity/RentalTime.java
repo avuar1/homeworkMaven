@@ -30,7 +30,7 @@ public class RentalTime {
 
     private LocalDateTime endRentalTime;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name ="order_id")
     private Order order;
 }
