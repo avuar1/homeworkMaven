@@ -1,5 +1,5 @@
 package com.avuar1.entity;
 
-public enum CategoryCar {
+public enum CategoryLevel {
     PREMIUM, ECONOM, MIDLE
 }

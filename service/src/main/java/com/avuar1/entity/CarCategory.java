@@ -19,7 +19,9 @@ public class CarCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category_level")
+    private CategoryLevel categoryLevel;
 
     private Double dayPrice;
 

@@ -68,7 +68,6 @@ class UserIT {
         }
     }
 
-
     @Test
     void updateUserTest() {
         log.info("Running testUpdate");
@@ -91,10 +90,8 @@ class UserIT {
 
         assertEquals("Petr", expectedUser.getFirstName());
 
-//        session.beginTransaction();
         session.delete(expectedUser);
         session.getTransaction().commit();
-//        session.getTransaction().commit();
     }
 
     @Test

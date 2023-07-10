@@ -26,7 +26,7 @@ DROP TABLE customer_data CASCADE;
 CREATE TABLE car_category
 (
     id        SERIAL PRIMARY KEY,
-    category  VARCHAR(128)  NOT NULL UNIQUE,
+    category_level  VARCHAR(128)  NOT NULL UNIQUE,
     day_price NUMERIC(8, 2) NOT NULL
 );
 
