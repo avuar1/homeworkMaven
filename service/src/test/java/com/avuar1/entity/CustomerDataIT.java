@@ -35,13 +35,11 @@ class CustomerDataIT {
     @BeforeAll
     void setup() {
         sessionFactory = HibernateTestUtil.buildSessionFactory();
-        log.info("SessionFactory created");
     }
 
     @BeforeEach
     public void openSession() {
         session = sessionFactory.openSession();
-        log.info("Session created");
 
         User user = User.builder()
                 .firstName("Ivan")
@@ -103,7 +101,6 @@ class CustomerDataIT {
         if (sessionFactory != null) {
             sessionFactory.close();
         }
-        log.info("SessionFactory destroyed");
     }
 
     @AfterEach
@@ -112,8 +109,6 @@ class CustomerDataIT {
         if (session != null) {
             session.close();
         }
-
-        log.info("Session closed");
     }
 
 }

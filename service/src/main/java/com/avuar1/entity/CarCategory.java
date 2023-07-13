@@ -1,18 +1,18 @@
 package com.avuar1.entity;
 
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 @Data
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "car_category", schema = "public")
+@Table(name = "car_category")
 public class CarCategory {
 
     @Id
@@ -21,10 +21,14 @@ public class CarCategory {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_level")
+    @EqualsAndHashCode.Include
     private CategoryLevel categoryLevel;
 
+    @EqualsAndHashCode.Include
     private Double dayPrice;
 
     @OneToMany(mappedBy = "carCategory", cascade = CascadeType.ALL)
-    private List<Car> cars;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Car> cars = new ArrayList<>();
 }

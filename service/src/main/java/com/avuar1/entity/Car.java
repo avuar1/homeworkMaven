@@ -2,21 +2,21 @@ package com.avuar1.entity;
 
 
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode()
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "car", schema = "public")
+@Table(name = "car")
 public class Car {
 
-    @Id  // Написать Скрипит
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private Integer id;
 
     @Enumerated(EnumType.STRING)

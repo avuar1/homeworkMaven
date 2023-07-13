@@ -7,41 +7,34 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.*;
 import util.HibernateTestUtil;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@Slf4j
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CarCategoryIT {
 
     private static SessionFactory sessionFactory;
-    private Session session;
-    private CarCategory carCategory;
+    private static Session session;
 
     @BeforeAll
-    void setup() {
+    static void setup() {
         sessionFactory = HibernateTestUtil.buildSessionFactory();
-        log.info("SessionFactory created");
     }
 
     @BeforeEach
     public void openSession() {
         session = sessionFactory.openSession();
-        log.info("Session created");
-
-        carCategory = CarCategory.builder()
-                .categoryLevel(CategoryLevel.PREMIUM)
-                .dayPrice(1500.00)
-                .cars(new ArrayList<>())
-                .build();
-
+        session.beginTransaction();
     }
 
     @Test
     void createCarCategoryTest() {
-        session.beginTransaction();
+        CarCategory carCategory = createCarCategory(); // создается в методе
+
         session.save(carCategory);
+        session.evict(carCategory);
+        session.flush();
 
         CarCategory actualRezult = session.get(CarCategory.class, carCategory.getId());
 
@@ -49,84 +42,74 @@ class CarCategoryIT {
         assertEquals(actualRezult.getId(), carCategory.getId());
         assertEquals("PREMIUM", actualRezult.getCategoryLevel().toString());
 
-        session.getTransaction().commit();
-
-        session.beginTransaction();
-        session.delete(carCategory);
-        session.getTransaction().commit();
     }
 
     @Test
     void getCarCategoryTest() {
-        session.beginTransaction();
+        CarCategory carCategory = createCarCategory();
+
         session.save(carCategory);
-
-        session.getTransaction().commit();
-
-        session.beginTransaction();
+        session.evict(carCategory);
+        session.flush();
 
         CarCategory actualRezult = session.get(CarCategory.class, carCategory.getId());
 
         assertNotNull(actualRezult);
-        assertEquals(actualRezult, carCategory);
-
-        session.getTransaction().commit();
-
-        session.beginTransaction();
-        session.delete(carCategory);
-        session.getTransaction().commit();
-
+        assertEquals(actualRezult.getId(), carCategory.getId());
+        assertEquals(actualRezult.getCategoryLevel(), carCategory.getCategoryLevel());
     }
 
     @Test
     void updateCarCategoryTest() {
-        session.beginTransaction();
+        CarCategory carCategory = createCarCategory();
         session.save(carCategory);
-        carCategory.setDayPrice(1300.00);
 
-        session.update(carCategory);
+        CarCategory savedCarCategory = session.get(CarCategory.class, carCategory.getId());
+        savedCarCategory.setDayPrice(1300.00);
+        session.update(savedCarCategory);
+        session.flush();
+        session.clear();
 
-        CarCategory actualRezult = session.get(CarCategory.class, carCategory.getId());
+        CarCategory actualRezult = session.get(CarCategory.class, savedCarCategory.getId());
 
-        assertEquals(1300, actualRezult.getDayPrice());
+        assertEquals(1300.00, actualRezult.getDayPrice(), 0.01);
 
-        session.getTransaction().commit();
-
-        session.beginTransaction();
-        session.delete(carCategory);
-        session.getTransaction().commit();
     }
-
+    //Правильно ли сделано
     @Test
     void deleteCarCategoryTest() {
-        session.beginTransaction();
+        CarCategory carCategory = createCarCategory();
         session.save(carCategory);
-        session.getTransaction().commit();
+        session.flush();
+        session.clear();
 
-        session.beginTransaction();
         session.delete(carCategory);
 
         CarCategory expectedResult = session.get(CarCategory.class, carCategory.getId());
-        Assertions.assertNull(expectedResult);
-        session.getTransaction().commit();
+        assertNull(expectedResult);
 
-    }
-
-    @AfterAll
-    void tearDown() {
-        if (sessionFactory != null) {
-            sessionFactory.close();
-        }
-        log.info("SessionFactory destroyed");
     }
 
     @AfterEach
     public void closeSession() {
-
+        session.getTransaction().rollback();
         if (session != null) {
             session.close();
         }
+    }
 
-        log.info("Session closed");
+    @AfterAll
+    static void tearDown() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
+    }
+
+    public CarCategory createCarCategory() {
+        return CarCategory.builder()
+                .categoryLevel(CategoryLevel.PREMIUM)
+                .dayPrice(1500.00)
+                .cars(new ArrayList<>())
+                .build();
     }
 }

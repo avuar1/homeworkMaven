@@ -3,17 +3,16 @@ package com.avuar1.entity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "users", schema = "public")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -24,6 +23,7 @@ public class User {
 
     private String lastName;
 
+    @EqualsAndHashCode.Include
     private String email;
 
     private String password;
@@ -32,10 +32,13 @@ public class User {
     private Role role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
     private CustomerData customerData;
 
-    @Builder.Default
     @OneToMany(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Builder.Default
     private List<Order> orders = new ArrayList<>();
 }
 

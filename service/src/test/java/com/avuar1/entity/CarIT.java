@@ -9,7 +9,6 @@ import util.HibernateTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CarIT {
 
@@ -21,13 +20,12 @@ class CarIT {
     @BeforeAll
     void setup() {
         sessionFactory = HibernateTestUtil.buildSessionFactory();
-        log.info("SessionFactory created");
     }
 
     @BeforeEach
     public void  openSession(){
         session = sessionFactory.openSession();
-        log.info("Session created");
+
 
         carCategory = CarCategory.builder()
                 .categoryLevel(CategoryLevel.PREMIUM)
@@ -88,7 +86,6 @@ class CarIT {
 
     @Test
     void updateCarTest() {
-        log.info("Running updateCarTest");
 
         session.beginTransaction();
         session.save(carCategory);
@@ -112,7 +109,6 @@ class CarIT {
 
     @Test
     void deleteCarTest() {
-        log.info("Running deleteCarTest");
 
         session.beginTransaction();
         session.save(carCategory);
@@ -133,7 +129,6 @@ class CarIT {
         if (sessionFactory != null) {
             sessionFactory.close();
         }
-        log.info("SessionFactory destroyed");
     }
 
     @AfterEach
@@ -142,8 +137,6 @@ class CarIT {
        if (session != null) {
             session.close();
         }
-
-        log.info("Session closed");
     }
 
 }

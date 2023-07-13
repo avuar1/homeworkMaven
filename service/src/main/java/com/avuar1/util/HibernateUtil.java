@@ -1,6 +1,6 @@
 package com.avuar1.util;
 
-import com.avuar1.entity.User;
+import com.avuar1.entity.*;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
@@ -21,6 +21,12 @@ public class HibernateUtil {
 
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(RentalTime.class);
+        configuration.addAnnotatedClass(Order.class);
+        configuration.addAnnotatedClass(CustomerData.class);
+        configuration.addAnnotatedClass(CarCategory.class);
+        configuration.addAnnotatedClass(Car.class);
+
 
         return configuration;
 

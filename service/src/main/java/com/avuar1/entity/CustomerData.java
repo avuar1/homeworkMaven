@@ -2,12 +2,11 @@ package com.avuar1.entity;
 
 import java.time.LocalDate;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode(of = {"driverLicenseNumber", "driverLicenseExpiration", "creditAmount"})
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

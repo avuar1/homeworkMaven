@@ -2,12 +2,11 @@ package com.avuar1.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,20 +16,22 @@ public class RentalTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Car car;
 
-    @Column(name = "car_id", insertable = false, updatable = false)
-    private String carId;
-
+    @EqualsAndHashCode.Include
     private LocalDateTime startRentalTime;
 
+    @EqualsAndHashCode.Include
     private LocalDateTime endRentalTime;
 
     @ManyToOne
     @JoinColumn(name ="order_id")
+    @ToString.Exclude
     private Order order;
 }

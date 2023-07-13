@@ -10,11 +10,5 @@
         <property name="format_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">create</property>
 
-        <mapping class="com.avuar1.entity.User"/>
-        <mapping class="com.avuar1.entity.RentalTime"/>
-        <mapping class="com.avuar1.entity.Order"/>
-        <mapping class="com.avuar1.entity.CustomerData"/>
-        <mapping class="com.avuar1.entity.CarCategory"/>
-        <mapping class="com.avuar1.entity.Car"/>
     </session-factory>
 </hibernate-configuration>
