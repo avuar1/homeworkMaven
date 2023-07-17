@@ -5,6 +5,16 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 
+@NamedEntityGraph(name = "WithUsersAndOrders",
+        attributeNodes = {
+                @NamedAttributeNode(value = "customerData", subgraph = "customerData"),
+                @NamedAttributeNode("orders")
+        },
+        subgraphs = {
+        @NamedSubgraph(name = "customerData", attributeNodes = @NamedAttributeNode("driverLicenseNumber"))
+        }
+)
+
 @Data
 @EqualsAndHashCode
 @ToString
@@ -31,8 +41,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CustomerData customerData;
 
     @OneToMany(mappedBy = "user")
@@ -40,6 +51,10 @@ public class User {
     @ToString.Exclude
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
+
+    public String fullName() {
+        return firstName + " " + lastName;
+    }
 }
 
 

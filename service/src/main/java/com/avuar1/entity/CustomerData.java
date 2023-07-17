@@ -5,7 +5,7 @@ import javax.persistence.*;
 import lombok.*;
 
 @Data
-@EqualsAndHashCode(of = {"driverLicenseNumber", "driverLicenseExpiration", "creditAmount"})
+@EqualsAndHashCode
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,14 +19,20 @@ public class CustomerData {
     private Integer id;
 
     @OneToOne
+    @ToString.Include
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Column(unique = true)
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private String driverLicenseNumber;
 
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private LocalDate driverLicenseExpiration;
 
+    @EqualsAndHashCode.Include
     private Double creditAmount;
 
     public void setUser(User user){
