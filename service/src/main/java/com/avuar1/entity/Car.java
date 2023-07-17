@@ -4,6 +4,7 @@ package com.avuar1.entity;
 import javax.persistence.*;
 import lombok.*;
 
+
 @Data
 @EqualsAndHashCode()
 @ToString

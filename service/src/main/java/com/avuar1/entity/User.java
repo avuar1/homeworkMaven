@@ -5,6 +5,13 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 
+@NamedEntityGraph(name = "WithUsersAndOrders",
+        attributeNodes = {
+                @NamedAttributeNode("customerData"),
+                @NamedAttributeNode("orders")
+        }
+)
+
 @Data
 @EqualsAndHashCode
 @ToString
