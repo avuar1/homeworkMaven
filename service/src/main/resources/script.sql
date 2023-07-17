@@ -5,9 +5,7 @@ CREATE TABLE users (
                        last_name VARCHAR(255) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE ,
                        password VARCHAR(255) NOT NULL,
-                       role VARCHAR(255) NOT NULL,
-                       customer_data_id INTEGER NOT NULL,
-                       FOREIGN KEY (customer_data_id) REFERENCES customer_data(id)
+                       role VARCHAR(255) NOT NULL
 );
 
 DROP TABLE users CASCADE;
@@ -15,8 +13,8 @@ DROP TABLE users CASCADE;
 
 CREATE TABLE customer_data (
                                id SERIAL PRIMARY KEY,
-                               user_id INTEGER NOT NULL,
-                               driver_license_number VARCHAR(255) UNIQUE NOT NULL,
+                               user_id INT REFERENCES users (id) NOT NULL UNIQUE ,
+                               driver_license_number VARCHAR(255) NOT NULL UNIQUE ,
                                driver_license_expiration DATE NOT NULL,
                                credit_amount NUMERIC(8 , 2) NOT NULL
 );
@@ -26,7 +24,7 @@ DROP TABLE customer_data CASCADE;
 CREATE TABLE car_category
 (
     id        SERIAL PRIMARY KEY,
-    category_level  VARCHAR(128)  NOT NULL UNIQUE,
+    category_level  VARCHAR(128)  NOT NULL,
     day_price NUMERIC(8, 2) NOT NULL
 );
 
