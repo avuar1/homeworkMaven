@@ -7,8 +7,11 @@ import lombok.*;
 
 @NamedEntityGraph(name = "WithUsersAndOrders",
         attributeNodes = {
-                @NamedAttributeNode("customerData"),
+                @NamedAttributeNode(value = "customerData", subgraph = "customerData"),
                 @NamedAttributeNode("orders")
+        },
+        subgraphs = {
+        @NamedSubgraph(name = "customerData", attributeNodes = @NamedAttributeNode("driverLicenseNumber"))
         }
 )
 
@@ -40,7 +43,7 @@ public class User {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CustomerData customerData;
 
     @OneToMany(mappedBy = "user")
