@@ -5,7 +5,6 @@ import javax.persistence.*;
 import lombok.*;
 
 @Data
-@EqualsAndHashCode
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,10 +1,11 @@
-import com.avuar1.entity.*;
-import com.avuar1.util.*;
-import java.util.*;
-import javax.persistence.*;
-import org.hibernate.*;
-import org.hibernate.graph.*;
-import org.hibernate.jpa.*;
+import com.avuar1.entity.User;
+import com.avuar1.util.HibernateUtil;
+import java.util.List;
+import java.util.Map;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.graph.GraphSemantic;
+import org.hibernate.graph.RootGraph;
 
 public class HibernateRunner {
     public static void main(String[] args) {
@@ -24,7 +25,7 @@ public class HibernateRunner {
 
             List<User> users = session.createQuery(
                     "select u from User u where 1=1", User.class)
-                    .setHint(GraphSemantic.LOAD.getJpaHintName(), graph)
+                    .setHint(GraphSemantic.FETCH.getJpaHintName(), graph)
                     .list();
 
             users.forEach(it -> System.out.println(it.getOrders()));

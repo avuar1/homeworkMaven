@@ -13,8 +13,7 @@ import util.HibernateTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 class CustomerDataIT {
 
 //    @OneToOne
@@ -27,13 +26,13 @@ class CustomerDataIT {
 //    private LocalDate driverLicenseExpiration;
 //
 //    private Double creditAmount;
-    private static SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
     private Session session;
     private User user;
     private CustomerData customerData;
 
     @BeforeAll
-    void setup() {
+    void  setup() {
         sessionFactory = HibernateTestUtil.buildSessionFactory();
     }
 
