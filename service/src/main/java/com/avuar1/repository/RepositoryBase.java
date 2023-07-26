@@ -1,6 +1,6 @@
 package com.avuar1.repository;
 
-import com.avuar1.entity.BaseEntity;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
+public abstract class RepositoryBase<K extends Serializable, E> implements Repository<K, E> {
 
     private final Class<E> clazz;
     @Getter
@@ -23,8 +23,8 @@ public abstract class RepositoryBase<K extends Serializable, E extends BaseEntit
     }
 
     @Override
-    public void delete(K id) {
-        entityManager.remove(entityManager.find(clazz, id));
+    public void delete(E entity) {
+        entityManager.remove(entity);
         entityManager.flush();
     }
 
