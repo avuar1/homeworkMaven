@@ -18,3 +18,4 @@
 !/.idea/sonarlint/issuestore/
 !/.idea/sonarlint/
 /service/service.iml
+/service/target/
