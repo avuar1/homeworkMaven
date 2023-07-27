@@ -119,7 +119,7 @@ class UserRepositoryIT {
         Optional<User> user = userRepository.findById(1);
 
         assertThat(user).isNotNull();
-        user.ifPresent(value -> assertThat(value.getFirstName()).isEqualTo("Bob"));
+        user.ifPresent(value -> assertThat(value.getFirstName()).isEqualTo("Maksim"));
         user.ifPresent(value -> assertThat(value.getEmail()).isEqualTo("test1@tut.by"));
 
     }
