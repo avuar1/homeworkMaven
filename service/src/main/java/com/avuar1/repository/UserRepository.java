@@ -13,7 +13,9 @@ import javax.persistence.criteria.Predicate;
 import org.hibernate.Session;
 
 import static com.avuar1.entity.QUser.user;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserRepository extends RepositoryBase<Integer, User> {
 
     public UserRepository(EntityManager entityManager) {
