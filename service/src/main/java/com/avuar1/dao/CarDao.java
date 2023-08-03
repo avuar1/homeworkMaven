@@ -2,19 +2,16 @@ package com.avuar1.dao;
 
 import com.avuar1.dto.CarFilter;
 import com.avuar1.entity.Car;
-import com.avuar1.entity.CarCategory;
 import com.avuar1.entity.CarModel;
 import com.avuar1.entity.CategoryLevel;
+import static com.avuar1.entity.QCar.car;
 import com.querydsl.jpa.impl.JPAQuery;
 import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
 
-import static com.avuar1.entity.QCar.car;
-
 public class CarDao {
-
 
     private static final CarDao INSTANCE = new CarDao();
 

@@ -1,15 +1,21 @@
 package com.avuar1.dao;
 
-import com.avuar1.dto.*;
-import com.avuar1.entity.*;
-import com.avuar1.entity.User_;
-import com.querydsl.jpa.impl.*;
-import java.util.*;
-import javax.persistence.criteria.*;
-import lombok.*;
-import org.hibernate.*;
 
+import com.avuar1.dto.UserFilter;
+import com.avuar1.entity.User;
+import com.avuar1.entity.User_;
+import com.querydsl.jpa.impl.JPAQuery;
 import static com.avuar1.entity.QUser.user;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.hibernate.Session;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserDao {
@@ -35,7 +41,7 @@ public class UserDao {
                 .list();
     }
 
-        public Optional<User> findByEmailAndPasswordWithCriteriaAPI(Session session, String email, String password){
+    public Optional<User> findByEmailAndPasswordWithCriteriaAPI(Session session, String email, String password) {
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
         CriteriaQuery<User> criteria = cb.createQuery(User.class);
@@ -51,14 +57,14 @@ public class UserDao {
 
     }
 
-    public List<User> findAllByFirstName(Session session, String firstName){
+    public List<User> findAllByFirstName(Session session, String firstName) {
         return session.createQuery("select u from User u where u.firstName = :firstName", User.class)
                 .setParameter("firstName", firstName)
                 .list();
     }
 
     // Возвращает User упорядоченных по email
-    public List<User> findLimitedUsersOrderByEmail(Session session, int limit){
+    public List<User> findLimitedUsersOrderByEmail(Session session, int limit) {
         return session.createQuery("select u from User u order by u.email", User.class)
                 .setMaxResults(limit)
                 .list();
@@ -109,7 +115,7 @@ public class UserDao {
                 .fetch();
     }
 
-    public static UserDao getInstance(){
+    public static UserDao getInstance() {
         return INSTANCE;
     }
 }

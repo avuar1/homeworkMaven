@@ -1,10 +1,13 @@
 package com.avuar1.dao;
 
-import com.querydsl.core.types.*;
+
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
-import java.util.*;
-import java.util.function.*;
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QPredicate {
