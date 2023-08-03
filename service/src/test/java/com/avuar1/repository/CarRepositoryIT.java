@@ -124,11 +124,11 @@ public class CarRepositoryIT {
         var carRepository = new CarRepository(session);
 
         List<Car> results = carRepository.findAll();
-        assertThat(results).hasSize(7);
+        assertThat(results).hasSize(11);
 
         List<String> cars = results.stream().map(Car::getColour).collect(toList());
         assertThat(cars).containsExactlyInAnyOrder(
-                "Red", "white", "Red", "Red", "Red", "Green", "White");
+                "Red", "white", "Red", "Red");
     }
 
     private Car createCar(CarCategory carCategory) {

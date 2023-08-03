@@ -1,10 +1,20 @@
 package util;
 
-import com.avuar1.entity.*;
-import java.time.*;
-import lombok.*;
-import lombok.experimental.*;
-import org.hibernate.*;
+
+import com.avuar1.entity.Car;
+import com.avuar1.entity.CarCategory;
+import com.avuar1.entity.CarModel;
+import com.avuar1.entity.CategoryLevel;
+import com.avuar1.entity.CustomerData;
+import com.avuar1.entity.Order;
+import com.avuar1.entity.OrderStatus;
+import com.avuar1.entity.RentalTime;
+import com.avuar1.entity.Role;
+import com.avuar1.entity.User;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import lombok.experimental.UtilityClass;
+import org.hibernate.Session;
 
 @UtilityClass
 public class TestDataImporter {

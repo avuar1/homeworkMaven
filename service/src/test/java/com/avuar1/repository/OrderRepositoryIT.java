@@ -128,7 +128,6 @@ class OrderRepositoryIT {
                 .isEqualTo("Test");
     }
 
-
     @Test
     void checkFindByIdOrder() {
         var orderRepository = new OrderRepository(session);
@@ -155,8 +154,6 @@ class OrderRepositoryIT {
         assertThat(order1).isNotNull();
 
     }
-
-
 
     private User createUser() {
         User user = User.builder()
