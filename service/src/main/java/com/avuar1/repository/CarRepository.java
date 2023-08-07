@@ -9,13 +9,14 @@ import org.hibernate.graph.GraphSemantic;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 
-public class CarRepository extends RepositoryBase<Integer, Car>{
+@Component
+public class CarRepository extends RepositoryBase<Integer, Car> {
 
     public CarRepository(EntityManager entityManager) {
         super(Car.class, entityManager);
     }
-
 
 }

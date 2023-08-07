@@ -27,8 +27,6 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(CarCategory.class);
         configuration.addAnnotatedClass(Car.class);
 
-
         return configuration;
-
     }
 }
