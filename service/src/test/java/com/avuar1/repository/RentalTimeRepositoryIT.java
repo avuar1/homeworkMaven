@@ -1,187 +1,140 @@
 package com.avuar1.repository;
 
-import com.avuar1.entity.*;
-
-import java.lang.reflect.Proxy;
+import com.avuar1.annotation.IT;
+import com.avuar1.entity.Car;
+import com.avuar1.entity.CarCategory;
+import com.avuar1.entity.CarModel;
+import com.avuar1.entity.CategoryLevel;
+import com.avuar1.entity.Order;
+import com.avuar1.entity.OrderStatus;
+import com.avuar1.entity.RentalTime;
+import com.avuar1.entity.Role;
+import com.avuar1.entity.User;
+import com.avuar1.util.TestDataImporter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import util.HibernateTestUtil;
-import util.TestDataImporter;
-
 import static java.util.stream.Collectors.toList;
+import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+@IT
+@RequiredArgsConstructor
 class RentalTimeRepositoryIT {
 
-    private final static SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory(); // фабрика на все тесты
-    private Session session; // Сессия на каждый тест своя
-
-
-    @AfterAll
-    public static void finish() {
-        sessionFactory.close();
-    }
+    private final RentalTimeRepository rentalTimeRepository;
+    private final EntityManager entityManager;
 
     @BeforeEach
-    public void setup() {
-        session = sessionFactory.openSession(); // сессия открывается в @BeforeEach
-        session.beginTransaction(); // и здесь же открываем транзакцию
-        TestDataImporter.importData(session); // Генерация данных для тестов
-    }
-
-    @AfterEach
-    void closeAll() {
-        session.getTransaction().rollback(); // откатываем транзакцию после теста, чтобы он не сохранял данные в БД
-        session.close(); //Закрываем сессию
-
+    void initDb() {
+        TestDataImporter.importData(entityManager);
     }
 
     @Test
     void checkSaveRentalTime() {
-
-        User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
+        User user = createUser();
         Order order = createOrder(user, car);
 
         RentalTime rentalTime = RentalTime.builder()
-                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 00, 00))
-                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 00, 00))
                 .car(car)
+                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 0))
+                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 0))
                 .order(order)
                 .build();
 
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
-        session.save(order);
-        session.save(carCategory);
-        session.save(rentalTime);
+        var saveRenatlTime = rentalTimeRepository.save(rentalTime);
 
-        var rentalTimeRepository = new RentalTimeRepository(session);
-        var save = rentalTimeRepository.save(rentalTime);
-
-        assertNotNull(save.getId());
+        assertNotNull(saveRenatlTime.getId());
     }
 
     @Test
     void checkDeleteRentalTime() {
-
-        var rentalTimeRepository = new RentalTimeRepository(session);
-
-        User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
+        User user = createUser();
         Order order = createOrder(user, car);
 
         RentalTime rentalTime = RentalTime.builder()
-                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 00, 00))
-                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 00, 00))
                 .car(car)
+                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 0))
+                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 0))
                 .order(order)
                 .build();
 
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
-        session.save(order);
-        session.save(carCategory);
-        session.save(rentalTime);
+        var saveRenatlTime = rentalTimeRepository.save(rentalTime);
 
-        var save = rentalTimeRepository.save(rentalTime);
-        session.flush();
-        rentalTimeRepository.delete(rentalTime);
+        rentalTimeRepository.delete(saveRenatlTime);
 
-        RentalTime rentalTime2 = session.get(RentalTime.class, rentalTime.getId());
-        assertNull(rentalTime2);
-
+        RentalTime rentalTime1 = entityManager.find(RentalTime.class, saveRenatlTime.getId());
+        assertNull(rentalTime1);
     }
 
     @Test
     void checkUpdateRentalTime() {
-        var rentalTimeRepository = new RentalTimeRepository(session);
-
-        User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
+        User user = createUser();
         Order order = createOrder(user, car);
 
+        entityManager.persist(car);
+        entityManager.persist(order);
+
         RentalTime rentalTime = RentalTime.builder()
-                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 00, 00))
-                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 00, 00))
                 .car(car)
+                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 0))
+                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 0))
                 .order(order)
                 .build();
 
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
-        session.save(order);
-        session.save(carCategory);
-        session.save(rentalTime);
-        session.flush();
+        var saveRenatlTime = rentalTimeRepository.save(rentalTime);
+        saveRenatlTime.setStartRentalTime(LocalDateTime.of(2025, 1, 25, 12, 00, 00));
+        rentalTimeRepository.update(saveRenatlTime);
 
-        rentalTime.setStartRentalTime(LocalDateTime.of(2025, 1, 25, 12, 00,00));
-        rentalTimeRepository.update(rentalTime);
-
-
-        RentalTime rentalTime3 = session.get(RentalTime.class, rentalTime.getId());
-        assertThat(rentalTime3.getStartRentalTime())
+        entityManager.flush();
+        RentalTime rentalTime1 = entityManager.find(RentalTime.class, saveRenatlTime.getId());
+        assertThat(rentalTime1.getStartRentalTime())
                 .isEqualTo(LocalDateTime.of(2025, 1, 25, 12, 00, 00));
-
     }
 
     @Test
     void checkFindByIdRentalTime() {
 
-        var rentalTimeRepository = new RentalTimeRepository(session);
-
-        User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
+        User user = createUser();
         Order order = createOrder(user, car);
 
+        entityManager.persist(car);
+        entityManager.persist(order);
+
         RentalTime rentalTime = RentalTime.builder()
-                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 00, 00))
-                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 00, 00))
                 .car(car)
+                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 0))
+                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 0))
                 .order(order)
                 .build();
 
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
-        session.save(order);
-        session.save(carCategory);
-        session.save(rentalTime);
-        session.flush();
+        var saveRenatlTime = rentalTimeRepository.save(rentalTime);
 
-        var beginTime = LocalDateTime.of(2020, 1, 25, 12, 00,00);
-        var endTime = LocalDateTime.of(2020, 1, 29, 18, 00,00);
+        var beginTime = LocalDateTime.of(2020, 1, 25, 12, 00, 00);
+        var endTime = LocalDateTime.of(2020, 1, 29, 18, 00, 00);
 
-        Optional<RentalTime> rentalTime2 = rentalTimeRepository.findById(rentalTime.getId());
+        Optional<RentalTime> rentalTime2 = rentalTimeRepository.findById(saveRenatlTime.getId());
         rentalTime2.ifPresent(System.out::println);
 
         assertThat(rentalTime2).isNotNull();
         rentalTime2.ifPresent(value -> assertThat(value.getStartRentalTime()).isEqualTo(beginTime));
         rentalTime2.ifPresent(value -> assertThat(value.getEndRentalTime()).isEqualTo(endTime));
-
-        session.getTransaction().rollback();
     }
 
     @Test
     void checkFindAllRentalTimes() {
-
-        var rentalTimeRepository = new RentalTimeRepository(session);
-
         List<RentalTime> results = rentalTimeRepository.findAll();
         assertThat(results).hasSize(3);
 
@@ -190,46 +143,41 @@ class RentalTimeRepositoryIT {
         var startRentalTime3 = LocalDateTime.of(2023, 10, 07, 12, 00, 00);
         List<LocalDateTime> beginTimes = results.stream().map(RentalTime::getStartRentalTime).collect(toList());
         assertThat(beginTimes).containsExactlyInAnyOrder(startRentalTime1, startRentalTime2, startRentalTime3);
-
     }
 
-    private User createUser(){
-        User user = User.builder()
+    private User createUser() {
+        return User.builder()
                 .firstName("Maksim")
                 .lastName("Petrov")
                 .email("uniq@gmail.com")
                 .password("123456")
                 .role(Role.CLIENT)
                 .build();
-        return user;
     }
 
-    private CarCategory createCarCategory(){
-        CarCategory carCategory = CarCategory.builder()
+    private CarCategory createCarCategory() {
+        return CarCategory.builder()
                 .categoryLevel(CategoryLevel.ECONOM)
                 .dayPrice(1200.00)
                 .build();
-        return carCategory;
     }
 
-    private Car createCar(CarCategory carCategory){
-        Car car = Car.builder()
+    private Car createCar(CarCategory carCategory) {
+        return Car.builder()
                 .carModel(CarModel.OPEL)
                 .carCategory(carCategory)
                 .colour("Red")
                 .seatsQuantity(5)
                 .build();
-        return car;
     }
 
-    private Order createOrder(User user, Car car){
-        Order order = Order.builder()
+    private Order createOrder(User user, Car car) {
+        return Order.builder()
                 .user(user)
                 .car(car)
                 .orderStatus(OrderStatus.ACCEPTED)
                 .message("wer")
                 .build();
-        return order;
     }
 
 }

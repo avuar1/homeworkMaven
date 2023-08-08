@@ -1,46 +1,35 @@
 package com.avuar1.repository;
 
-import com.avuar1.entity.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
+import com.avuar1.annotation.IT;
+import com.avuar1.entity.Car;
+import com.avuar1.entity.CarCategory;
+import com.avuar1.entity.CarModel;
+import com.avuar1.entity.CategoryLevel;
+import com.avuar1.entity.Order;
+import com.avuar1.entity.OrderStatus;
+import com.avuar1.entity.Role;
+import com.avuar1.entity.User;
+import com.avuar1.util.TestDataImporter;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.HibernateTestUtil;
-import util.TestDataImporter;
-
-import java.util.Optional;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-
+@IT
+@RequiredArgsConstructor
 class OrderRepositoryIT {
 
-    private final static SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory(); // фабрика на все тесты
-    private Session session; // Сессия на каждый тест своя
-
-
-    @AfterAll
-    public static void finish() {
-        sessionFactory.close();
-    }
+    private final OrderRepository orderRepository;
+    private final EntityManager entityManager;
 
     @BeforeEach
-    public void setup() {
-        session = sessionFactory.openSession(); // сессия открывается в @BeforeEach
-        session.beginTransaction(); // и здесь же открываем транзакцию
-        TestDataImporter.importData(session); // Генерация данных для тестов
-    }
-
-    @AfterEach
-    void closeAll() {
-        session.getTransaction().rollback(); // откатываем транзакцию после теста, чтобы он не сохранял данные в БД
-        session.close(); //Закрываем сессию
-
+    void initDb() {
+        TestDataImporter.importData(entityManager);
     }
 
     @Test
@@ -57,131 +46,111 @@ class OrderRepositoryIT {
                 .message("wer")
                 .build();
 
-
-        var orderRepository = new OrderRepository(session);
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
-
         orderRepository.save(order);
-
-        session.flush();
-
         assertNotNull(order);
     }
 
     @Test
     void checkDeleteOrder() {
+
         User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
-
-        Order order = Order.builder()
+        Order orderSaved = Order.builder()
                 .user(user)
                 .car(car)
                 .orderStatus(OrderStatus.ACCEPTED)
                 .message("wer")
                 .build();
 
+        orderRepository.save(orderSaved);
+        orderRepository.delete(orderSaved);
 
-        var orderRepository = new OrderRepository(session);
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
-
-        orderRepository.save(order);
-        session.flush();
-
-        orderRepository.delete(order);
-         Order order1 = session.get(Order.class, order.getId());
+        Order order1 = entityManager.find(Order.class, orderSaved.getId());
 
         assertNull(order1);
     }
 
     @Test
     void checkUpdateOrder() {
-        var orderRepository = new OrderRepository(session);
-
         User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
-
-        Order order = Order.builder()
+        Order orderSaved = Order.builder()
                 .user(user)
                 .car(car)
                 .orderStatus(OrderStatus.ACCEPTED)
                 .message("wer")
                 .build();
 
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
+        orderRepository.save(orderSaved);
 
-        orderRepository.save(order);
-        session.flush();
+        Order order1 = entityManager.find(Order.class, orderSaved.getId());
+        order1.setMessage("Test");
+        orderRepository.update(order1);
 
-        order.setMessage("Test");
-        orderRepository.update(order);
-        session.flush();
-        Order order1 = session.get(Order.class, order.getId());
-        assertThat(order1.getMessage())
-                .isEqualTo("Test");
+        entityManager.flush();
+        Order order2 = entityManager.find(Order.class, orderSaved.getId());
+
+        assertThat(order2.getMessage()).isEqualTo("Test");
     }
 
     @Test
     void checkFindByIdOrder() {
-        var orderRepository = new OrderRepository(session);
         User user = createUser();
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
-
-        Order order = Order.builder()
+        Order orderSaved = Order.builder()
                 .user(user)
                 .car(car)
                 .orderStatus(OrderStatus.ACCEPTED)
                 .message("wer")
                 .build();
 
-        session.save(user);
-        session.save(carCategory);
-        session.save(car);
+        orderRepository.save(orderSaved);
 
-        orderRepository.save(order);
-        session.flush();
-
-        Optional<Order> order1 = orderRepository.findById(order.getId());
+        Optional<Order> order1 = orderRepository.findById(orderSaved.getId());
 
         assertThat(order1).isNotNull();
+        order1.ifPresent(value -> assertThat(value.getMessage()).isEqualTo("wer"));
+    }
 
+    @Test
+    void checkFindAllOrders() {
+        List<Order> results = orderRepository.findAll();
+        assertThat(results).hasSize(3);
     }
 
     private User createUser() {
-        User user = User.builder()
+        return User.builder()
                 .firstName("Maksim")
                 .lastName("Petrov")
                 .email("uniq@gmail.com")
                 .password("123456")
                 .role(Role.CLIENT)
                 .build();
-        return user;
+    }
+
+    @Test
+    void findOrdersByStatus() {
+        List<Order> results = orderRepository.findByStatus(OrderStatus.ACCEPTED);
+
+        assertThat(results).hasSize(1);
     }
 
     private Car createCar(CarCategory carCategory) {
-        Car car = Car.builder()
+        return Car.builder()
                 .carModel(CarModel.OPEL)
                 .carCategory(carCategory)
                 .colour("Red")
                 .seatsQuantity(5)
                 .build();
-        return car;
     }
 
     private CarCategory createCarCategory() {
-        CarCategory carCategory = CarCategory.builder()
+        return CarCategory.builder()
                 .categoryLevel(CategoryLevel.ECONOM)
                 .dayPrice(1200.00)
                 .build();
-        return carCategory;
     }
-
 }

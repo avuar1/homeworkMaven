@@ -1,6 +1,5 @@
 package com.avuar1.entity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -20,12 +19,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @EqualsAndHashCode.Exclude
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     @EqualsAndHashCode.Exclude
     private Car car;
