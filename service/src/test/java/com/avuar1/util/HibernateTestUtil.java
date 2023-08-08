@@ -1,12 +1,12 @@
-package util;
+package com.avuar1.util;
 
-import com.avuar1.util.HibernateUtil;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@UtilityClass
+@SpringBootTest
 public class HibernateTestUtil {
 
     // Здесь образ с докер хаба postgres и версия образа с докер хаб, мы поставили 13
