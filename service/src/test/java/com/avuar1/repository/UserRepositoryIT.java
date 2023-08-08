@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-
 import org.assertj.core.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;

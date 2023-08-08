@@ -15,12 +15,8 @@ import lombok.RequiredArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 @IT
 @RequiredArgsConstructor
@@ -29,18 +25,6 @@ class CarRepositoryIT {
     private final CarRepository carRepository;
     private final EntityManager entityManager;
 
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
-    static {  // статический блок инициализации, которые один раз запускает постгрес
-        postgres.start();
-    }
     @BeforeEach
     void initDb() {
         TestDataImporter.importData(entityManager);
