@@ -82,7 +82,9 @@ class OrderRepositoryIT {
                 .orderStatus(OrderStatus.ACCEPTED)
                 .message("wer")
                 .build();
-
+        entityManager.persist(car);
+        entityManager.persist(carCategory);
+        entityManager.persist(user);
         orderRepository.save(orderSaved);
 
         Order order1 = entityManager.find(Order.class, orderSaved.getId());

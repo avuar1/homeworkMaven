@@ -57,6 +57,8 @@ class CarRepositoryIT {
     void checkUpdateCar() {
         CarCategory carCategory = createCarCategory();
         Car carForSave = createCar(carCategory);
+        entityManager.persist(carCategory);
+
 
         var savedCar = carRepository.save(carForSave);
         savedCar.setColour("BLUE");

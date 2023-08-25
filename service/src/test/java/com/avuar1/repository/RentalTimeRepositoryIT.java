@@ -82,6 +82,8 @@ class RentalTimeRepositoryIT {
         User user = createUser();
         Order order = createOrder(user, car);
 
+        entityManager.persist(carCategory);
+        entityManager.persist(user);
         entityManager.persist(car);
         entityManager.persist(order);
 
