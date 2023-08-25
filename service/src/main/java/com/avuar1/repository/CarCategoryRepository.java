@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional
+@Transactional(readOnly = true)
 public class CarCategoryRepository extends RepositoryBase<Integer, CarCategory> {
 
     public CarCategoryRepository(EntityManager entityManager) {

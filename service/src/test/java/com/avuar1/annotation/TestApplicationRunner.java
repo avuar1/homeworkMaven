@@ -10,6 +10,9 @@ public class TestApplicationRunner {
 
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13");
 
+    static {  // статический блок инициализации, которые один раз запускает постгрес
+        postgres.start();
+    }
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
@@ -17,7 +20,5 @@ public class TestApplicationRunner {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    static {  // статический блок инициализации, которые один раз запускает постгрес
-        postgres.start();
-    }
+
 }

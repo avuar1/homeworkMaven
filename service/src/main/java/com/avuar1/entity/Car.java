@@ -24,7 +24,7 @@ public class Car implements Serializable {
     @Enumerated(EnumType.STRING)
     private CarModel carModel;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private CarCategory carCategory;
 

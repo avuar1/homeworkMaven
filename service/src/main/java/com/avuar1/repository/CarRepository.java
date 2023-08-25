@@ -29,7 +29,7 @@ public class CarRepository extends RepositoryBase<Integer, Car> {
 
         return new JPAQuery<Car>(getEntityManager())
                 .select(car)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), carGraph)
+                .setHint(GraphSemantic.FETCH.getJpaHintName(), carGraph)
                 .from(car)
                 .where(car.carCategory.categoryLevel.eq(CategoryLevel.valueOf(carCategory)))
                 .fetch();

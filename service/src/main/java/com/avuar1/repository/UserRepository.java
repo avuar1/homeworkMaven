@@ -35,8 +35,11 @@ public class UserRepository extends RepositoryBase<Integer, User> {
                 cb.equal(user.get(User_.PASSWORD), password)
         );
 
-        return Optional.ofNullable(getEntityManager().createQuery(criteria)
-                .getSingleResult());
+        return getEntityManager().createQuery(criteria)
+                .getResultList()
+                .stream()
+                .findFirst();
+
     }
 
     public Optional<User> findByEmailAndPasswordWithQuerydsl(String email, String password) {
