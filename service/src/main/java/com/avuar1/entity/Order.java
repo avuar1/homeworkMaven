@@ -1,6 +1,5 @@
 package com.avuar1.entity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;

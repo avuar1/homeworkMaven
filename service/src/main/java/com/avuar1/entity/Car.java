@@ -1,6 +1,7 @@
 package com.avuar1.entity;
 
 
+import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "car")
-public class Car {
+public class Car implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
