@@ -47,7 +47,7 @@ public class CustomerData {
     @EqualsAndHashCode.Include
     private Double creditAmount;
 
-    public void setUser(User user){
+    public void setUser(User user) {
         user.setCustomerData(this);
         this.user = user;
     }

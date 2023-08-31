@@ -31,7 +31,7 @@ public class RentalTime {
     private LocalDateTime endRentalTime;
 
     @ManyToOne
-    @JoinColumn(name ="order_id")
+    @JoinColumn(name = "order_id")
     @ToString.Exclude
     private Order order;
 }

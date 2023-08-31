@@ -9,49 +9,29 @@ import com.avuar1.entity.Order;
 import com.avuar1.entity.OrderStatus;
 import com.avuar1.entity.Role;
 import com.avuar1.entity.User;
-import com.avuar1.util.TestDataImporter;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.jdbc.Sql;
 
 
 @IT
+@Sql({
+        "classpath:sql/data.sql"
+})
 @RequiredArgsConstructor
 class OrderRepositoryIT {
 
     private final OrderRepository orderRepository;
-    private final EntityManager entityManager;
-
-    @BeforeEach
-    void initDb() {
-        TestDataImporter.importData(entityManager);
-    }
+    private final CarRepository carRepository;
+    private final CarCategoryRepository carCategoryRepository;
+    private final UserRepository userRepository;
 
     @Test
     void checkSaveOrder() {
-
-        User user = createUser();
-        CarCategory carCategory = createCarCategory();
-        Car car = createCar(carCategory);
-
-        Order order = Order.builder()
-                .user(user)
-                .car(car)
-                .orderStatus(OrderStatus.ACCEPTED)
-                .message("wer")
-                .build();
-
-        orderRepository.save(order);
-        assertNotNull(order);
-    }
-
-    @Test
-    void checkDeleteOrder() {
 
         User user = createUser();
         CarCategory carCategory = createCarCategory();
@@ -64,11 +44,8 @@ class OrderRepositoryIT {
                 .build();
 
         orderRepository.save(orderSaved);
-        orderRepository.delete(orderSaved);
 
-        Order order1 = entityManager.find(Order.class, orderSaved.getId());
-
-        assertNull(order1);
+        assertNotNull(orderSaved.getId());
     }
 
     @Test
@@ -82,19 +59,41 @@ class OrderRepositoryIT {
                 .orderStatus(OrderStatus.ACCEPTED)
                 .message("wer")
                 .build();
-        entityManager.persist(car);
-        entityManager.persist(carCategory);
-        entityManager.persist(user);
+        userRepository.save(user);
+        carCategoryRepository.save(carCategory);
+        carRepository.save(car);
         orderRepository.save(orderSaved);
 
-        Order order1 = entityManager.find(Order.class, orderSaved.getId());
-        order1.setMessage("Test");
-        orderRepository.update(order1);
+        orderSaved.setMessage("Test");
 
-        entityManager.flush();
-        Order order2 = entityManager.find(Order.class, orderSaved.getId());
+        orderRepository.saveAndFlush(orderSaved);
 
-        assertThat(order2.getMessage()).isEqualTo("Test");
+        Optional<Order> updatedOrder = orderRepository.findById(orderSaved.getId());
+
+        updatedOrder.ifPresent(order -> assertThat(order.getMessage()).isEqualTo("Test"));
+    }
+
+    @Test
+    void checkDeleteOrder() {
+        User user = createUser();
+        CarCategory carCategory = createCarCategory();
+        Car car = createCar(carCategory);
+        Order orderSaved = Order.builder()
+                .user(user)
+                .car(car)
+                .orderStatus(OrderStatus.ACCEPTED)
+                .message("wer")
+                .build();
+        userRepository.save(user);
+        carCategoryRepository.save(carCategory);
+        carRepository.save(car);
+        orderRepository.save(orderSaved);
+
+        orderRepository.delete(orderSaved);
+
+        Optional<Order> deletedOrder = orderRepository.findById(orderSaved.getId());
+
+        assertTrue(deletedOrder.isEmpty());
     }
 
     @Test
@@ -120,7 +119,7 @@ class OrderRepositoryIT {
     @Test
     void checkFindAllOrders() {
         List<Order> results = orderRepository.findAll();
-        assertThat(results).hasSize(3);
+        assertThat(results).hasSize(4);
     }
 
     private User createUser() {
@@ -135,9 +134,8 @@ class OrderRepositoryIT {
 
     @Test
     void findOrdersByStatus() {
-        List<Order> results = orderRepository.findByStatus(OrderStatus.ACCEPTED);
-
-        assertThat(results).hasSize(1);
+        List<Order> results = orderRepository.findByOrderStatus(OrderStatus.ACCEPTED);
+        assertThat(results).hasSize(3);
     }
 
     private Car createCar(CarCategory carCategory) {

@@ -32,10 +32,16 @@
         <javax.persistence-api>2.2</javax.persistence-api>
         <hibernate.jpamodelgen.version>5.5.9.Final</hibernate.jpamodelgen.version>
         <spring-boot-starter-data-jpa.version>2.7.14</spring-boot-starter-data-jpa.version>
+        <liquibase-core.version>4.23.1</liquibase-core.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase-core.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-apt</artifactId>

@@ -1,15 +1,7 @@
 package com.avuar1.repository;
 
 import com.avuar1.entity.CustomerData;
-import javax.persistence.EntityManager;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-@Transactional
-public class CustomerDataRepository extends RepositoryBase<Integer, CustomerData> {
-
-    public CustomerDataRepository(EntityManager entityManager) {
-        super(CustomerData.class, entityManager);
-    }
+public interface CustomerDataRepository extends JpaRepository<CustomerData, Integer> {
 }

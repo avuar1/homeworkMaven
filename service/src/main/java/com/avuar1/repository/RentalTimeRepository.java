@@ -1,15 +1,7 @@
 package com.avuar1.repository;
 
 import com.avuar1.entity.RentalTime;
-import javax.persistence.EntityManager;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-@Transactional
-public class RentalTimeRepository extends RepositoryBase<Integer, RentalTime> {
-
-    public RentalTimeRepository(EntityManager entityManager) {
-        super(RentalTime.class, entityManager);
-    }
+public interface RentalTimeRepository extends JpaRepository<RentalTime, Integer> {
 }

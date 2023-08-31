@@ -10,29 +10,28 @@ import com.avuar1.entity.OrderStatus;
 import com.avuar1.entity.RentalTime;
 import com.avuar1.entity.Role;
 import com.avuar1.entity.User;
-import com.avuar1.util.TestDataImporter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import static java.util.stream.Collectors.toList;
-import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.jdbc.Sql;
 
 @IT
+@Sql({
+        "classpath:sql/data.sql"
+})
 @RequiredArgsConstructor
 class RentalTimeRepositoryIT {
 
     private final RentalTimeRepository rentalTimeRepository;
-    private final EntityManager entityManager;
-
-    @BeforeEach
-    void initDb() {
-        TestDataImporter.importData(entityManager);
-    }
+    private final CarRepository carRepository;
+    private final CarCategoryRepository carCategoryRepository;
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Test
     void checkSaveRentalTime() {
@@ -54,11 +53,44 @@ class RentalTimeRepositoryIT {
     }
 
     @Test
+    void checkUpdateRentalTime() {
+        CarCategory carCategory = createCarCategory();
+        Car car = createCar(carCategory);
+        User user = createUser();
+        Order order = createOrder(user, car);
+
+        carCategoryRepository.save(carCategory);
+        userRepository.save(user);
+        carRepository.save(car);
+        orderRepository.save(order);
+
+        RentalTime rentalTime = RentalTime.builder()
+                .car(car)
+                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 0))
+                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 0))
+                .order(order)
+                .build();
+
+        var saveRenatlTime = rentalTimeRepository.save(rentalTime);
+        saveRenatlTime.setStartRentalTime(LocalDateTime.of(2025, 1, 25, 12, 00, 00));
+
+        rentalTimeRepository.flush();
+        Optional<RentalTime> rentalTime1 = rentalTimeRepository.findById(rentalTime.getId());
+        rentalTime1.ifPresent(time -> assertThat(time.getStartRentalTime())
+                .isEqualTo(LocalDateTime.of(2025, 1, 25, 12, 00, 00)));
+    }
+
+    @Test
     void checkDeleteRentalTime() {
         CarCategory carCategory = createCarCategory();
         Car car = createCar(carCategory);
         User user = createUser();
         Order order = createOrder(user, car);
+
+        carCategoryRepository.save(carCategory);
+        userRepository.save(user);
+        carRepository.save(car);
+        orderRepository.save(order);
 
         RentalTime rentalTime = RentalTime.builder()
                 .car(car)
@@ -71,38 +103,10 @@ class RentalTimeRepositoryIT {
 
         rentalTimeRepository.delete(saveRenatlTime);
 
-        RentalTime rentalTime1 = entityManager.find(RentalTime.class, saveRenatlTime.getId());
-        assertNull(rentalTime1);
+        Optional<RentalTime> rentalTime1 = rentalTimeRepository.findById(rentalTime.getId());
+        assertTrue(rentalTime1.isEmpty());
     }
 
-    @Test
-    void checkUpdateRentalTime() {
-        CarCategory carCategory = createCarCategory();
-        Car car = createCar(carCategory);
-        User user = createUser();
-        Order order = createOrder(user, car);
-
-        entityManager.persist(carCategory);
-        entityManager.persist(user);
-        entityManager.persist(car);
-        entityManager.persist(order);
-
-        RentalTime rentalTime = RentalTime.builder()
-                .car(car)
-                .startRentalTime(LocalDateTime.of(2020, 1, 25, 12, 0))
-                .endRentalTime(LocalDateTime.of(2020, 1, 29, 18, 0))
-                .order(order)
-                .build();
-
-        var saveRenatlTime = rentalTimeRepository.save(rentalTime);
-        saveRenatlTime.setStartRentalTime(LocalDateTime.of(2025, 1, 25, 12, 00, 00));
-        rentalTimeRepository.update(saveRenatlTime);
-
-        entityManager.flush();
-        RentalTime rentalTime1 = entityManager.find(RentalTime.class, saveRenatlTime.getId());
-        assertThat(rentalTime1.getStartRentalTime())
-                .isEqualTo(LocalDateTime.of(2025, 1, 25, 12, 00, 00));
-    }
 
     @Test
     void checkFindByIdRentalTime() {
@@ -112,8 +116,10 @@ class RentalTimeRepositoryIT {
         User user = createUser();
         Order order = createOrder(user, car);
 
-        entityManager.persist(car);
-        entityManager.persist(order);
+        carCategoryRepository.save(carCategory);
+        userRepository.save(user);
+        carRepository.save(car);
+        orderRepository.save(order);
 
         RentalTime rentalTime = RentalTime.builder()
                 .car(car)
@@ -138,13 +144,12 @@ class RentalTimeRepositoryIT {
     @Test
     void checkFindAllRentalTimes() {
         List<RentalTime> results = rentalTimeRepository.findAll();
-        assertThat(results).hasSize(3);
+        assertThat(results).hasSize(2);
 
-        var startRentalTime1 = LocalDateTime.of(2023, 10, 07, 12, 00, 00);
-        var startRentalTime2 = LocalDateTime.of(2023, 10, 07, 12, 00, 00);
-        var startRentalTime3 = LocalDateTime.of(2023, 10, 07, 12, 00, 00);
+        var startRentalTime1 = LocalDateTime.of(2020, 01, 25, 12, 00, 00);
+        var startRentalTime2 = LocalDateTime.of(2020, 02, 25, 12, 00, 00);
         List<LocalDateTime> beginTimes = results.stream().map(RentalTime::getStartRentalTime).collect(toList());
-        assertThat(beginTimes).containsExactlyInAnyOrder(startRentalTime1, startRentalTime2, startRentalTime3);
+        assertThat(beginTimes).containsExactlyInAnyOrder(startRentalTime1, startRentalTime2);
     }
 
     private User createUser() {
