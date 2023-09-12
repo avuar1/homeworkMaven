@@ -36,11 +36,11 @@ class UserControllerIT extends IntegrationTestBase {
     @Test
     void create() throws Exception {
         mockMvc.perform(post("/users")
-                        .param(firstName, "Test")
-                        .param(lastName, "Test")
-                        .param(email, "test@gmail.com")
-                        .param(password,"123")
-                        .param(role, "ADMIN")
+                        .param(String.valueOf(firstName), "Test")
+                        .param(String.valueOf(lastName), "Test")
+                        .param(String.valueOf(email), "test@gmail.com")
+                        .param(String.valueOf(password),"123")
+                        .param(String.valueOf(role), "ADMIN")
                 )
                 .andExpectAll(
                         status().is3xxRedirection(),
