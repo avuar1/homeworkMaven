@@ -26,35 +26,32 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <spring.version>5.3.20</spring.version>
+
         <postgresql.test.containers.version>1.18.3</postgresql.test.containers.version>
-        <querydsl.version>5.0.0</querydsl.version>
         <javax.persistence-api>2.2</javax.persistence-api>
         <hibernate.jpamodelgen.version>5.5.9.Final</hibernate.jpamodelgen.version>
-        <spring-boot-starter-data-jpa.version>2.7.14</spring-boot-starter-data-jpa.version>
-        <liquibase-core.version>4.23.1</liquibase-core.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>${liquibase-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.querydsl</groupId>
-                <artifactId>querydsl-apt</artifactId>
-                <version>${querydsl.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.querydsl</groupId>
-                <artifactId>querydsl-jpa</artifactId>
-                <version>${querydsl.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>org.liquibase</groupId>-->
+<!--                <artifactId>liquibase-core</artifactId>-->
+<!--                <version>${liquibase-core.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.querydsl</groupId>-->
+<!--                <artifactId>querydsl-apt</artifactId>-->
+<!--                <version>${querydsl.version}</version>-->
+<!--                <scope>provided</scope>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.querydsl</groupId>-->
+<!--                <artifactId>querydsl-jpa</artifactId>-->
+<!--                <version>${querydsl.version}</version>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 
     <build>
         <pluginManagement>
