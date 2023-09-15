@@ -2,6 +2,7 @@ package com.avuar1.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,7 +24,7 @@ import lombok.ToString;
 
 @Data
 @EqualsAndHashCode
-@ToString(exclude = {"rentalTimes", "car", "user"})
+@ToString(exclude = {"rentalTimes", "car", "templates/user"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -53,7 +54,7 @@ public class Order {
     private String message;
 
     @Builder.Default
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<RentalTime> rentalTimes = new ArrayList<>();
 

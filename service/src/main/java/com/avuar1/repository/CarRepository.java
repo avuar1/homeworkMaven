@@ -14,10 +14,13 @@ public interface CarRepository extends JpaRepository<Car, Integer>, QuerydslPred
 
     List<Car> findByCarCategory(CarCategory carCategory);
 
-    @Query(value = "SELECT cc.day_price " +
-            "FROM car_category cc " +
-            "JOIN car c on cc.id = c.category_id" +
-            "WHERE c.car_model = :carModel",
-            nativeQuery = true)
-    Optional<Double> findDayPriceBy(@Param("carModel") CarModel carModel);
+    @Query("select c.carCategory from Car c where c.carModel = :model")
+    Optional<CarCategory> findByModel(String model);
+
+//    @Query(value = "SELECT cc.day_price " +
+//            "FROM car_category cc " +
+//            "JOIN car c on cc.id = c.category_id" +
+//            "WHERE c.car_model = :carModel",
+//            nativeQuery = true)
+//    Optional<Double> findDayPriceBy(@Param("carModel") CarModel carModel);
 }
