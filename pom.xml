@@ -30,6 +30,7 @@
         <postgresql.test.containers.version>1.18.3</postgresql.test.containers.version>
         <javax.persistence-api>2.2</javax.persistence-api>
         <hibernate.jpamodelgen.version>5.5.9.Final</hibernate.jpamodelgen.version>
+        <springdoc>1.7.0</springdoc>
     </properties>
 
 <!--    <dependencyManagement>-->

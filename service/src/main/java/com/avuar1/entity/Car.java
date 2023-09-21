@@ -45,4 +45,6 @@ public class Car implements Serializable {
     private String colour;
 
     private Integer seatsQuantity;
+
+    private String image; // добавить image в таблицу
 }

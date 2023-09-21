@@ -1,5 +1,6 @@
 package com.avuar1.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -45,6 +46,10 @@ public class Order {
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     @EqualsAndHashCode.Exclude
     private Car car;
+
+    private LocalDateTime beginTime;
+
+    private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     @EqualsAndHashCode.Include

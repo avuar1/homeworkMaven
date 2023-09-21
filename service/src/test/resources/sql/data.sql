@@ -15,13 +15,13 @@ VALUES ('ECONOM', 50.0),
        ('MIDLE', 55.0),
        ('SUV', 65.0);
 
-INSERT INTO car (car_model, category_id, colour, seats_quantity)
-VALUES ('OPEL', (SELECT id FROM car_category WHERE category_level = 'ECONOM'), 'WHITE', 5),
-       ('MERSEDES', (SELECT id FROM car_category WHERE category_level = 'SEDAN'), 'BLACK', 5),
-       ('TOYOTA', (SELECT id FROM car_category WHERE category_level = 'SUV'), 'WHITE', 7),
-       ('LAMBORGINI', (SELECT id FROM car_category WHERE category_level = 'PREMIUM'), 'WHITE', 7),
-       ('SHKODA', (SELECT id FROM car_category WHERE category_level = 'MIDLE'), 'BLACK', 5),
-       ('CHERRY', (SELECT id FROM car_category WHERE category_level = 'MIDLE'), 'RED', 5);
+INSERT INTO car (car_model, category_id, colour, seats_quantity, image)
+VALUES ('OPEL', (SELECT id FROM car_category WHERE category_level = 'ECONOM'), 'WHITE', 5, 1),
+       ('MERSEDES', (SELECT id FROM car_category WHERE category_level = 'SEDAN'), 'BLACK', 5, 2),
+       ('TOYOTA', (SELECT id FROM car_category WHERE category_level = 'SUV'), 'WHITE', 7, 3),
+       ('LAMBORGINI', (SELECT id FROM car_category WHERE category_level = 'PREMIUM'), 'WHITE', 7, 4),
+       ('SHKODA', (SELECT id FROM car_category WHERE category_level = 'MIDLE'), 'BLACK', 5, 5),
+       ('CHERRY', (SELECT id FROM car_category WHERE category_level = 'MIDLE'), 'RED', 5, 6);
 
 INSERT INTO orders (user_id, car_id, order_status, message)
 VALUES ((SELECT id FROM users WHERE last_name = 'Petrov'), (SELECT id FROM car WHERE car_model = 'TOYOTA RAV4'),
